@@ -9,7 +9,7 @@ import { Ingredients } from './components/Ingredients';
 import { Instructions } from './components/Instructions';
 
 function App() {
-  const [ready, waiting, sendMessage] = useTimer();
+  const [{ ready, waiting, time }, sendMessage] = useTimer();
   const [current, send] = useMachine(doughMachine);
 
   const continueRecipe = useCallback(() => {
@@ -41,7 +41,8 @@ function App() {
         current={current}
         start={() => send('START')}
         continueRecipe={continueRecipe}
-        waiting={waiting} />
+        waiting={waiting}
+        time={time} />
     </div>
   );
 }

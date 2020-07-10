@@ -2,6 +2,7 @@ import { Machine } from 'xstate';
 import { DoughStateSchema, DoughContext, DoughEvent } from './interfaces';
 import { reset, stretchDough, bakeUncovered } from './actions';
 import { breadFinished, stretchesComplete } from './conditions';
+import timings from '../recipe/timings.json';
 
 export type { DoughContext, DoughEvent } from './interfaces';
 
@@ -10,8 +11,8 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
   initial: 'idle',
   context: {
     stretches: 0,
-    stretchWait: 15,
-    bakeTime: 20,
+    stretchWait: timings.stretch.short,
+    bakeTime: timings.bake.covered,
   },
   states: {
     idle: {
@@ -21,7 +22,7 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     levain: {
       meta: {
-        wait: 0.25
+        wait: timings.levain
       },
       on: {
         NEXT: 'autolyse',
@@ -29,7 +30,7 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     autolyse: {
       meta: {
-        wait: 0.25
+        wait: timings.autolyse
       },
       on: {
         NEXT: 'leaven'
@@ -37,7 +38,7 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     leaven: {
       meta: {
-        wait: 20
+        wait: timings.leaven
       },
       on: {
         NEXT: 'salt'
@@ -45,27 +46,27 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     salt: {
       meta: {
-        wait: 15
+        wait: timings.salt
       },
       on: {
         NEXT: 'stretch'
       }
     },
     stretch: {
+      always: {
+        target: 'rest',
+        cond: stretchesComplete
+      },
       on: {
         NEXT: {
           target: 'stretch',
           actions: stretchDough
         },
-        '': {
-          target: 'rest',
-          cond: stretchesComplete
-        },
       }
     },
     rest: {
       meta: {
-        wait: 90
+        wait: timings.rest
       },
       on: {
         NEXT: 'shape'
@@ -83,23 +84,23 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     preheat: {
       meta: {
-        wait: 60
+        wait: timings.preheat
       },
       on: {
         NEXT: 'bake'
       }
     },
     bake: {
+      always: {
+        target: 'idle',
+        cond: breadFinished,
+        actions: reset
+      },
       on: {
         NEXT: {
           target: 'bake',
           actions: bakeUncovered
         },
-        '': {
-          target: 'idle',
-          cond: breadFinished,
-          actions: reset
-        }
       }
     }
   }

@@ -13,6 +13,7 @@ interface InstructionProps {
   start: Function;
   continueRecipe: Function;
   waiting: boolean;
+  time: string;
 }
 
 async function fetchRecipeSection(path: string) {
@@ -20,7 +21,7 @@ async function fetchRecipeSection(path: string) {
   return result.text();
 }
 
-export function Instructions({ current, start, continueRecipe, waiting }: InstructionProps) {
+export function Instructions({ current, start, continueRecipe, waiting, time }: InstructionProps) {
   const stateValue = current.value as string;
   const [stepText, setStepText] = useState('');
 
@@ -42,6 +43,7 @@ export function Instructions({ current, start, continueRecipe, waiting }: Instru
           <button disabled={waiting} className="next-button" onClick={() => continueRecipe()}>
             {waiting ? 'Waiting...' : 'Continue'}
           </button>
+          <p>{time}</p>
           <ReactMarkdown source={stepText} />
           {current.matches('stretch') && <Stretch {...current.context} />}
         </>}

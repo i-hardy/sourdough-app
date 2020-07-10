@@ -1,0 +1,16 @@
+{
+  "levain": 240,
+  "autolyse": 60,
+  "leaven": 20,
+  "salt": 15,
+  "stretch": {
+    "short": 15,
+    "long": 30
+  },
+  "rest": 90,
+  "preheat": 60,
+  "bake": {
+    "covered": 20,
+    "uncovered": 30
+  }
+}

@@ -1,24 +1,31 @@
 import { useState, useEffect } from 'react';
+import { makeReadableTime } from './timeUtils';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import * as workerPath from "file-loader?name=[name].js!./timer.worker";
 
-const worker = new Worker(workerPath)
+const worker = new Worker(workerPath, { type: 'module' })
 
-export function useTimer(): [boolean, boolean, Function] {
-  const [isWorking, setIsWorking] = useState(false);
-  const [status, setStatus] = useState(false);
+export function useTimer(): [{ ready: boolean, waiting: boolean, time: string }, Function] {
+  const [waiting, setIsWaiting] = useState(false);
+  const [ready, setIsReady] = useState(false);
+  const [time, setTime] = useState('');
   
-  function sendMessage(message: any) {
-    if (!isWorking) {
-      setStatus(false);
-      setIsWorking(true);
-      worker.postMessage(message);
+  function sendMessage(waitTime: number) {
+    if (!waiting) {
+      setIsReady(false);
+      setIsWaiting(true);
+      worker.postMessage(waitTime);
     }
   }
 
   function updateStatus(event: MessageEvent) {
-    setIsWorking(false);
-    setStatus(event.data);
+    if (event.data === 'done') {
+      setIsWaiting(false);
+      setIsReady(true);
+      setTime('');
+    } else {
+      setTime(makeReadableTime(event.data))
+    }
   }
 
   useEffect(() => {
@@ -28,5 +35,9 @@ export function useTimer(): [boolean, boolean, Function] {
     }
   });
 
-  return [status, isWorking, sendMessage]
+  return [{
+    ready,
+    waiting,
+    time,
+  }, sendMessage]
 }

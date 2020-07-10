@@ -3,13 +3,15 @@ import useSound from 'use-sound';
 import timerAlarm from '../../assets/alarm.mp3';
 
 export function TimerAlarm({ ready }: { ready: boolean }) {
-  const [play] = useSound(timerAlarm);
+  const [play, { stop }] = useSound(timerAlarm);
 
   useEffect(() => {
     if (ready) {
-      play()
+      play();
+    } else {
+      stop();
     }
-  }, [ready, play])
+  }, [ready, play, stop])
 
   return null
 }
