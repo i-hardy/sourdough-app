@@ -1,0 +1,1 @@
+Mix together your bread flour and whole wheat flour. Add 580g of your water to the flour mixture (keeping 100g to the side for mixing later). Mix just until your dough comes together. Cover with plastic wrap and let it rest in a warm area (same as your levain).

@@ -1,0 +1,1 @@
+Mix your salt into the rest of your water and incorporate into the dough with a series of slap and folds for 2-4 minutes or until your dough is smooth and begins to catch some air. Rest in the same warm area you placed your levain.

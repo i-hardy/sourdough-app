@@ -1,24 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
+import { useMachine } from '@xstate/react';
+import 'normalize.css';
 import './App.css';
+import { doughMachine } from './stateMachine/doughMachine';
+import { Stretch } from './components/Stretch';
+import { Step } from './components/Step';
+import { Ingredients } from './components/Ingredients';
 
 function App() {
+  const [current, send] = useMachine(doughMachine);  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header className="header">
+        <h1>Let's Make Sourdough!</h1>
       </header>
+      <Ingredients />
+      <section className="instructions">
+        {current.matches('idle') ? 
+          <button onClick={() => send('START')}>Start</button>
+          :
+          <>
+            <button onClick={() => send('NEXT')}>Next step</button>
+            <Step value={current.value}/>
+            {current.matches('stretch') && <Stretch {...current.context} />}
+          </>}
+      </section>
     </div>
   );
 }
