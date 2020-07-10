@@ -9,14 +9,17 @@ export interface DoughStateSchema {
     rest: {};
     shape: {};
     proof: {};
+    preheat: {};
+    bake: {};
   };
 }
 
 export interface DoughContext {
   stretches: number;
   stretchWait: number;
+  bakeTime: number;
 }
 
 export type DoughEvent =
   { type: 'START' }
-  | { type: 'NEXT'; duration: number };
+  | { type: 'NEXT' };

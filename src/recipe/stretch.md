@@ -1,1 +1,3 @@
+## Stretch your dough
+
 With wet hands, take hold of a good chunk of the side of the dough and stretch until it's almost about to tear, then fold this back over the dough. Repeat all the way around your ball of dough, then rest in a warm area again.

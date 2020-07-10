@@ -1,22 +1,9 @@
-import { Machine, assign } from 'xstate';
+import { Machine } from 'xstate';
 import { DoughStateSchema, DoughContext, DoughEvent } from './interfaces';
+import { reset, stretchDough, bakeUncovered } from './actions';
+import { breadFinished, stretchesComplete } from './conditions';
 
-const reset = assign<DoughContext>({
-  stretches: 0,
-  stretchWait: 15,
-});
-
-const stretchDough = assign<DoughContext>({
-  stretches: (context: DoughContext) => context.stretches + 1,
-  stretchWait: (context: DoughContext) => {
-    if (context.stretches >= 2) return 30;
-    return 15;
-  }
-});
-
-function stretchesComplete(context: DoughContext) {
-  return context.stretches >= 6;
-}
+export type { DoughContext, DoughEvent } from './interfaces';
 
 export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>({
   id: 'sourdough',
@@ -24,6 +11,7 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
   context: {
     stretches: 0,
     stretchWait: 15,
+    bakeTime: 20,
   },
   states: {
     idle: {
@@ -32,21 +20,33 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
       }
     },
     levain: {
+      meta: {
+        wait: 0.25
+      },
       on: {
         NEXT: 'autolyse',
       }
     },
     autolyse: {
+      meta: {
+        wait: 0.25
+      },
       on: {
         NEXT: 'leaven'
       }
     },
     leaven: {
+      meta: {
+        wait: 20
+      },
       on: {
         NEXT: 'salt'
       }
     },
     salt: {
+      meta: {
+        wait: 15
+      },
       on: {
         NEXT: 'stretch'
       }
@@ -64,6 +64,9 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
       }
     },
     rest: {
+      meta: {
+        wait: 90
+      },
       on: {
         NEXT: 'shape'
       }
@@ -75,8 +78,26 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
     },
     proof: {
       on: {
+        NEXT: 'preheat'
+      }
+    },
+    preheat: {
+      meta: {
+        wait: 60
+      },
+      on: {
+        NEXT: 'bake'
+      }
+    },
+    bake: {
+      on: {
         NEXT: {
+          target: 'bake',
+          actions: bakeUncovered
+        },
+        '': {
           target: 'idle',
+          cond: breadFinished,
           actions: reset
         }
       }

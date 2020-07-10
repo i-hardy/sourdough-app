@@ -1,0 +1,38 @@
+{
+  "levain": [
+    {
+      "name": "bread flour",
+      "quantity": 17.5
+    },
+    {
+      "name": "whole wheat flour",
+      "quantity": 17.5
+    },
+    {
+      "name": "mature starter",
+      "quantity": 17.5
+    },
+    {
+      "name": "water",
+      "quantity": 35
+    }
+  ],
+  "dough": [
+    {
+      "name": "bread flour",
+      "quantity": 405
+    },
+    {
+      "name": "whole wheat flour",
+      "quantity": 45
+    },
+    {
+      "name": "water",
+      "quantity": 340
+    },
+    {
+      "name": "sea salt",
+      "quantity": 9
+    }
+  ]
+}

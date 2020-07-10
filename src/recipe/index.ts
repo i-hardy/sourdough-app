@@ -6,6 +6,8 @@ import stretch from './stretch.md';
 import rest from './rest.md';
 import shape from './shape.md';
 import proof from './proof.md';
+import preheat from './preheat.md';
+import bake from './bake.md';
 
 export const recipe: { [key: string]: string } = {
   levain,
@@ -15,5 +17,7 @@ export const recipe: { [key: string]: string } = {
   stretch,
   rest,
   shape,
-  proof
+  proof,
+  preheat,
+  bake
 }

@@ -6,25 +6,26 @@
   grid-template-rows: 1fr 4fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  font-size: 1rem;
   color: white;
+  padding: 0 4rem;
+}
+
+.ingredients, .instructions {
+  padding: 1rem 2rem;
 }
 
 .ingredients {
   grid-area: 2 / 1 / 3 / 2;
 }
 
-ul {
+.ingredients ul {
   list-style: none;
   padding-left: 1rem;
 }
 
 .instructions {
   grid-area: 2 / 2 / 3 / 3;
-}
-
-.ingredients, .instructions {
-  padding: 1rem 2rem;
+  text-align: center;
 }
 
 .header {
@@ -34,4 +35,41 @@ ul {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+button {
+  background: none;
+  display:inline-block;
+  padding: 0.5rem 1.2rem;
+  border:0.1em solid #FFFFFF;
+  margin:0 0.3em 0.3em 0;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-weight:300;
+  color:#FFFFFF;
+  text-align:center;
+  transition: all 0.2s;
+}
+
+button:hover{
+  color:#000000;
+  background-color:#FFFFFF;
+}
+
+button:disabled {
+  color: grey;
+  border-color: grey;
+  background: none;
+}
+
+input {
+  max-width: 2rem;
+  margin-left: 1rem;
+  border: none;
+  padding: 0.1rem 0.25rem;
+}
+
+button, input {
+  border-radius: .12rem;
+  font-size: inherit;
 }

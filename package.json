@@ -11,12 +11,13 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@xstate/react": "^0.8.1",
-    "normalize.css": "^8.0.1",
+    "postcss-normalize": "^9.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-markdown": "^4.3.1",
     "react-scripts": "3.4.1",
     "typescript": "^3.9.6",
+    "use-sound": "^1.0.2",
     "xstate": "^4.10.0"
   },
   "scripts": {

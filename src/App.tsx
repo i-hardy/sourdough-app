@@ -1,30 +1,47 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useMachine } from '@xstate/react';
-import 'normalize.css';
 import './App.css';
-import { doughMachine } from './stateMachine/doughMachine';
-import { Stretch } from './components/Stretch';
-import { Step } from './components/Step';
+import { useTimer } from './worker';
+import { doughMachine } from './stateMachine';
+import { KeyboardHandler } from './components/renderless/KeyboardHandler';
+import { TimerAlarm } from './components/renderless/TimerAlarm';
 import { Ingredients } from './components/Ingredients';
+import { Instructions } from './components/Instructions';
 
 function App() {
-  const [current, send] = useMachine(doughMachine);  
+  const [ready, waiting, sendMessage] = useTimer();
+  const [current, send] = useMachine(doughMachine);
+
+  const continueRecipe = useCallback(() => {
+    const currentStepMeta = current.meta[`sourdough.${current.value}`];
+    if (currentStepMeta) {
+      sendMessage(currentStepMeta.wait);
+    } else {
+      sendMessage(0);
+    }
+  }, [current.meta, current.value, sendMessage])
+
+  useEffect(() => {
+    if (ready) {
+      send('NEXT');
+    }
+  }, [ready, send])
+
   return (
     <div className="app">
+      {!current.matches('idle') && <>
+        <KeyboardHandler continueRecipe={continueRecipe} />
+        <TimerAlarm ready={ready} />
+      </>}
       <header className="header">
         <h1>Let's Make Sourdough!</h1>
       </header>
       <Ingredients />
-      <section className="instructions">
-        {current.matches('idle') ? 
-          <button onClick={() => send('START')}>Start</button>
-          :
-          <>
-            <button onClick={() => send('NEXT')}>Next step</button>
-            <Step value={current.value}/>
-            {current.matches('stretch') && <Stretch {...current.context} />}
-          </>}
-      </section>
+      <Instructions
+        current={current}
+        start={() => send('START')}
+        continueRecipe={continueRecipe}
+        waiting={waiting} />
     </div>
   );
 }

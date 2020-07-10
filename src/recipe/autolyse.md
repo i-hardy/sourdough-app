@@ -1,1 +1,3 @@
-Mix together your bread flour and whole wheat flour. Add 580g of your water to the flour mixture (keeping 100g to the side for mixing later). Mix just until your dough comes together. Cover with plastic wrap and let it rest in a warm area (same as your levain).
+## Autolyse
+
+Mix together your bread flour and whole wheat flour. Set aside 50g of water per loaf, and add the remainder to the flour mixture. Mix just until your dough comes together. Cover with plastic wrap and let it rest in a warm area (same as your levain).

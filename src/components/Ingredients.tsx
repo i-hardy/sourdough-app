@@ -1,26 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ingredients from '../recipe/ingredients.json';
+
+interface Ingredient {
+  name: string;
+  quantity: number;
+}
 
 export function Ingredients() {
+  const [loaves, setLoaves] = useState(2);
+  
+  function IngredientListItem({ name, quantity }: Ingredient) {
+    return (
+      <li key={name}>{Math.floor(quantity * loaves)} grams {name}</li>
+    )
+  }
+
+  function changeLoafAmount(event: React.ChangeEvent<HTMLInputElement>) {
+    const loafAmount = Number.parseInt(event.target.value, 10);
+    if (loafAmount > 0) {
+      setLoaves(loafAmount)
+    }
+  }
+
   return (
     <section className="ingredients">
       <h2>Ingredients</h2>
-      <p>Quantity: 2 loaves</p>
+      <p>
+        <label htmlFor="loaves">
+          Loaves:
+          <input type="number" name="loaves" id="loaves" value={loaves} onChange={changeLoafAmount} />
+        </label>
+      </p>
       <div>
         <h3>For the levain:</h3>
           <ul>
-            <li>35 grams bread flour</li>
-            <li>35 grams whole wheat flour</li>
-            <li>35 grams mature starter</li>
-            <li>70 grams filtered water</li>
+            {ingredients.levain.map(IngredientListItem)}
           </ul>
       </div>
       <div>
         <h3>For the dough:</h3>
         <ul>
-          <li>810 grams bread flour</li>
-          <li>90 grams whole wheat flour</li>
-          <li>680 grams filtered water (at 90℉)</li>
-          <li>18 grams fine sea salt</li>
+          {ingredients.dough.map(IngredientListItem)}
         </ul>
       </div>
       <div>
