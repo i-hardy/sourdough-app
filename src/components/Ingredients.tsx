@@ -23,6 +23,12 @@ export function Ingredients() {
           <li>18 grams fine sea salt</li>
         </ul>
       </div>
+      <div>
+        <h3>Additionally:</h3>
+        <ul>
+          <li>Some rice flour or plain/all-purpose flour for dusting</li>
+        </ul>
+      </div>
     </section>
   )
 }
