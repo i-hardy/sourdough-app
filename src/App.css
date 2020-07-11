@@ -2,7 +2,7 @@
   background-color: #282c34;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: 1fr 4fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -10,8 +10,14 @@
   padding: 0 4rem;
 }
 
-.ingredients, .instructions {
+.ingredients, .instructions, .start {
   padding: 1rem 2rem;
+}
+
+.start {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .ingredients {
@@ -26,6 +32,8 @@
 .instructions {
   grid-area: 2 / 2 / 3 / 3;
   text-align: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .header {
@@ -37,29 +45,39 @@
   justify-content: center;
 }
 
-button {
+.button {
   background: none;
-  display:inline-block;
+  display: block;
   padding: 0.5rem 1.2rem;
-  border:0.1em solid #FFFFFF;
-  margin:0 0.3em 0.3em 0;
+  border: 0.1em solid #FFFFFF;
   box-sizing: border-box;
-  text-decoration:none;
-  font-weight:300;
-  color:#FFFFFF;
-  text-align:center;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
   transition: all 0.2s;
 }
 
-button:hover{
+.button:hover, .button:focus {
   color:#000000;
   background-color:#FFFFFF;
 }
 
-button:disabled {
+.button:disabled {
   color: grey;
   border-color: grey;
   background: none;
+}
+
+.buttons {
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttons .button {
+  width: 75%;
+  margin-bottom: 1rem;
 }
 
 input {

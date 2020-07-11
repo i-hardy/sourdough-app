@@ -46,7 +46,7 @@ export function Ingredients() {
       <div>
         <h3>Additionally:</h3>
         <ul>
-          <li>Some rice flour or plain/all-purpose flour for dusting</li>
+          <li>Rice flour or all-purpose flour for dusting</li>
         </ul>
       </div>
     </section>

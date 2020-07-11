@@ -1,25 +1,41 @@
 import React, { useEffect, useCallback } from 'react';
 import { useMachine } from '@xstate/react';
+import { State } from 'xstate';
 import './App.css';
-import { useTimer } from './worker';
-import { doughMachine } from './stateMachine';
+import { useTimer } from './timer';
+import { doughMachine, DoughContext, DoughEvent } from './stateMachine';
 import { KeyboardHandler } from './components/renderless/KeyboardHandler';
 import { TimerAlarm } from './components/renderless/TimerAlarm';
+import { Controls } from './components/Controls';
 import { Ingredients } from './components/Ingredients';
 import { Instructions } from './components/Instructions';
 
+function determineNextInterval(current: State<DoughContext, DoughEvent, any, {
+  value: any;
+  context: DoughContext;
+}>) {
+  const currentStepMeta = current.meta[`sourdough.${current.value}`];
+  if (currentStepMeta) return currentStepMeta.wait;
+  if (current.matches('stretch')) return current.context.stretchWait;
+  if (current.matches('bake')) return current.context.bakeTime;
+  return 0;
+}
+
 function App() {
-  const [{ ready, waiting, time }, sendMessage] = useTimer();
+  const [{ ready, waiting, time }, {
+    setTimers,
+    stopTimers
+  }] = useTimer();
   const [current, send] = useMachine(doughMachine);
 
   const continueRecipe = useCallback(() => {
-    const currentStepMeta = current.meta[`sourdough.${current.value}`];
-    if (currentStepMeta) {
-      sendMessage(currentStepMeta.wait);
-    } else {
-      sendMessage(0);
-    }
-  }, [current.meta, current.value, sendMessage])
+    setTimers(determineNextInterval(current))
+  }, [current, setTimers])
+
+  function skip() {
+    stopTimers();
+    send('NEXT');
+  }
 
   useEffect(() => {
     if (ready) {
@@ -29,20 +45,27 @@ function App() {
 
   return (
     <div className="app">
-      {!current.matches('idle') && <>
-        <KeyboardHandler continueRecipe={continueRecipe} />
-        <TimerAlarm ready={ready} />
-      </>}
       <header className="header">
+        {!current.matches('idle') && <>
+          <KeyboardHandler continueRecipe={continueRecipe} />
+          <TimerAlarm ready={ready} />
+        </>}
         <h1>Let's Make Sourdough!</h1>
       </header>
       <Ingredients />
-      <Instructions
-        current={current}
-        start={() => send('START')}
-        continueRecipe={continueRecipe}
-        waiting={waiting}
-        time={time} />
+      {current.matches('idle') ? 
+        <section className="start">
+          <button className="button" onClick={() => send('START')}>Start</button>
+        </section> :
+        <Instructions
+          current={current}>
+            <Controls time={time} waiting={waiting} actions={{
+              continueRecipe,
+              skip,
+              reset: stopTimers
+            }}/>
+        </Instructions>
+      }
     </div>
   );
 }

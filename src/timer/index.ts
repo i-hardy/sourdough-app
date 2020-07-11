@@ -3,14 +3,24 @@ import { makeReadableTime } from './timeUtils';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import * as workerPath from "file-loader?name=[name].js!./timer.worker";
 
+const initialTime = '00:00:00'
 const worker = new Worker(workerPath, { type: 'module' })
 
-export function useTimer(): [{ ready: boolean, waiting: boolean, time: string }, Function] {
+interface TimerProperties {
+  ready: boolean; waiting: boolean; time: string;
+}
+
+interface TimerFunctions {
+  setTimers: Function;
+  stopTimers: Function;
+}
+
+export function useTimer(): [TimerProperties, TimerFunctions] {
   const [waiting, setIsWaiting] = useState(false);
   const [ready, setIsReady] = useState(false);
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState(initialTime);
   
-  function sendMessage(waitTime: number) {
+  function setTimers(waitTime: number) {
     if (!waiting) {
       setIsReady(false);
       setIsWaiting(true);
@@ -18,11 +28,18 @@ export function useTimer(): [{ ready: boolean, waiting: boolean, time: string },
     }
   }
 
+  function stopTimers() {
+    if (waiting) {
+      setIsWaiting(false);
+      worker.postMessage('stop');
+    }
+  }
+
   function updateStatus(event: MessageEvent) {
     if (event.data === 'done') {
       setIsWaiting(false);
       setIsReady(true);
-      setTime('');
+      setTime(initialTime);
     } else {
       setTime(makeReadableTime(event.data))
     }
@@ -39,5 +56,8 @@ export function useTimer(): [{ ready: boolean, waiting: boolean, time: string },
     ready,
     waiting,
     time,
-  }, sendMessage]
+  }, {
+    setTimers,
+    stopTimers
+  }]
 }

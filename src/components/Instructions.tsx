@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactChild } from 'react';
 import { State } from 'xstate';
 import ReactMarkdown from 'react-markdown';
 import { DoughContext, DoughEvent } from '../stateMachine';
@@ -10,10 +10,7 @@ interface InstructionProps {
     value: any;
     context: DoughContext;
   }>;
-  start: Function;
-  continueRecipe: Function;
-  waiting: boolean;
-  time: string;
+  children: ReactChild
 }
 
 async function fetchRecipeSection(path: string) {
@@ -21,7 +18,7 @@ async function fetchRecipeSection(path: string) {
   return result.text();
 }
 
-export function Instructions({ current, start, continueRecipe, waiting, time }: InstructionProps) {
+export function Instructions({ current, children }: InstructionProps) {
   const stateValue = current.value as string;
   const [stepText, setStepText] = useState('');
 
@@ -36,17 +33,11 @@ export function Instructions({ current, start, continueRecipe, waiting, time }: 
 
   return (
     <section className="instructions">
-      {current.matches('idle') ? 
-        <button className="start-button" onClick={() => start()}>Start</button>
-        :
-        <>
-          <button disabled={waiting} className="next-button" onClick={() => continueRecipe()}>
-            {waiting ? 'Waiting...' : 'Continue'}
-          </button>
-          <p>{time}</p>
-          <ReactMarkdown source={stepText} />
-          {current.matches('stretch') && <Stretch {...current.context} />}
-        </>}
+      <div>
+        <ReactMarkdown source={stepText} />
+        {current.matches('stretch') && <Stretch stretches={current.context.stretches} />}
+      </div>
+      {children}
     </section>
   );
 }
