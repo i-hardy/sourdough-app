@@ -33,7 +33,7 @@ export function Instructions({ current, children }: InstructionProps) {
 
   return (
     <section className="instructions">
-      <div>
+      <div aria-live="polite">
         <ReactMarkdown source={stepText} />
         {current.matches('stretch') && <Stretch stretches={current.context.stretches} />}
       </div>

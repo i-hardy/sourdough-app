@@ -78,12 +78,16 @@ export const doughMachine = Machine<DoughContext, DoughStateSchema, DoughEvent>(
       }
     },
     proof: {
+      meta: {
+        suppressTimer: true
+      },
       on: {
         NEXT: 'preheat'
       }
     },
     preheat: {
       meta: {
+        suppressTimer: true,
         wait: timings.preheat
       },
       on: {

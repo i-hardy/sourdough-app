@@ -27,6 +27,7 @@ function App() {
     stopTimers
   }] = useTimer();
   const [current, send] = useMachine(doughMachine);
+  const { suppressTimer } = current.meta[`sourdough.${current.value}`] || {};
 
   const continueRecipe = useCallback(() => {
     setTimers(determineNextInterval(current))
@@ -48,7 +49,7 @@ function App() {
       <header className="header">
         {!current.matches('idle') && <>
           <KeyboardHandler continueRecipe={continueRecipe} />
-          <TimerAlarm ready={ready} />
+          <TimerAlarm ready={ready} suppressTimer={suppressTimer} />
         </>}
         <h1>Let's Make Sourdough!</h1>
       </header>

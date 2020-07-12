@@ -28,7 +28,7 @@ export function Ingredients() {
       <p>
         <label htmlFor="loaves">
           Loaves:
-          <input type="number" name="loaves" id="loaves" value={loaves} onChange={changeLoafAmount} />
+          <input type="number" name="loaves" aria-label="Adjust the number of loaves for the recipe" id="loaves" value={loaves} onChange={changeLoafAmount} />
         </label>
       </p>
       <div>
