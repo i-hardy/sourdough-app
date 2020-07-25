@@ -1,10 +1,11 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useMachine } from '@xstate/react';
 import { State } from 'xstate';
 
 import { useTimer } from './timer';
 import { doughMachine, DoughContext, DoughEvent } from './stateMachine';
 
+import { baseContext, RecipeContext } from './context';
 import { KeyboardHandler } from './components/renderless/KeyboardHandler';
 import { TimerAlarm } from './components/renderless/TimerAlarm';
 
@@ -30,6 +31,7 @@ function App() {
     setTimers,
     stopTimers
   }] = useTimer();
+  const [recipeSettings, setRecipeSettings] = useState(baseContext);
   const [current, send] = useMachine(doughMachine);
   const { suppressTimer } = current.meta[`sourdough.${current.value}`] || {};
 
@@ -42,6 +44,10 @@ function App() {
     send('NEXT');
   }
 
+  function setLoaves(amount: number) {
+    setRecipeSettings({ ...recipeSettings, loaves: amount });
+  }
+
   useEffect(() => {
     if (ready) {
       send('NEXT');
@@ -50,29 +56,31 @@ function App() {
 
   return (
     <Main>
-      <Header area="1 / 1 / 2 / 3">
-        {!current.matches('idle') && <>
-          <KeyboardHandler continueRecipe={continueRecipe} />
-          <TimerAlarm ready={ready} suppressTimer={suppressTimer} />
-        </>}
-        <h1>Let's Make Sourdough!</h1>
-      </Header>
-      <Ingredients />
-      <GridItem area="2 / 2 / 3 / 3">
-        {current.matches('idle') ? 
-          <Column>
-            <BigButton onClick={() => send('START')}>Start</BigButton>
-          </Column> :
-          <Instructions
-            current={current}>
-              <Controls time={time} waiting={waiting} actions={{
-                continueRecipe,
-                skip,
-                reset: stopTimers
-              }}/>
-          </Instructions>
-        }
-      </GridItem>
+      <RecipeContext.Provider value={recipeSettings}>
+        <Header area="1 / 1 / 2 / 3">
+          {!current.matches('idle') && <>
+            <KeyboardHandler continueRecipe={continueRecipe} />
+            <TimerAlarm ready={ready} suppressTimer={suppressTimer} />
+          </>}
+          <h1>Let's Make Sourdough!</h1>
+        </Header>
+        <Ingredients setLoaves={setLoaves} />
+        <GridItem area="2 / 2 / 3 / 3">
+          {current.matches('idle') ? 
+            <Column>
+              <BigButton onClick={() => send('START')}>Start</BigButton>
+            </Column> :
+            <Instructions
+              current={current}>
+                <Controls time={time} waiting={waiting} actions={{
+                  continueRecipe,
+                  skip,
+                  reset: stopTimers
+                }}/>
+            </Instructions>
+          }
+        </GridItem>
+      </RecipeContext.Provider>
     </Main>
   );
 }

@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+
+import { RecipeContext } from '../context';
 import { GridItem } from './styled/Layout';
 import { List } from './styled/List';
 import { Form, Input } from './styled/Form';
+import { Weight } from './measurements/Weight';
 import ingredients from '../recipe/ingredients.json';
 
 interface Ingredient {
@@ -9,14 +12,18 @@ interface Ingredient {
   quantity: number;
 }
 
-export function Ingredients() {
-  const [loaves, setLoaves] = useState(2);
-  
-  function IngredientListItem({ name, quantity }: Ingredient) {
-    return (
-      <li key={name}>{Math.floor(quantity * loaves) || 0} grams {name}</li>
-    )
-  }
+interface IngredientsProps {
+  setLoaves: Function;
+}
+
+function IngredientListItem({ name, quantity }: Ingredient) {
+  return (
+    <li key={name}><Weight amount={quantity} /> {name}</li>
+  )
+}
+
+export function Ingredients({ setLoaves }: IngredientsProps) {
+  const { loaves } = useContext(RecipeContext);
 
   function changeLoafAmount(event: React.ChangeEvent<HTMLInputElement>) {
     const loafAmount = Number.parseInt(event.target.value, 10);
