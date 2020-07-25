@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, ButtonGroup } from './styled/Button';
 
 interface ControlProps {
   time: string;
@@ -18,22 +19,22 @@ export function Controls({ time, waiting, actions }: ControlProps) {
         <p>Time until next step</p>
         <p>{time}</p>
       </div>
-      <div className="buttons">
-        <button disabled={waiting} className="button" onClick={() => actions.continueRecipe()}>
+      <ButtonGroup>
+        <Button disabled={waiting} onClick={() => actions.continueRecipe()}>
           {waiting ? 'Waiting...' : 'Continue the recipe'}
-        </button>
-        <button className="button" onClick={() => actions.skip()}>
+        </Button>
+        <Button onClick={() => actions.skip()}>
           Skip to next step
-        </button>
+        </Button>
         {waiting &&
           <>
-            <button className="button" onClick={() => actions.reset()}>
+            <Button onClick={() => actions.reset()}>
               Restart step
-            </button>
+            </Button>
             <p role="alert">Timer set for the next step</p>
           </>
         }
-      </div>
+      </ButtonGroup>
     </div>
   )
 }

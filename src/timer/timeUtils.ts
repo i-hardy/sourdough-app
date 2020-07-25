@@ -14,7 +14,7 @@ function remainingSeconds(seconds: number) {
 }
 
 function timeStringSegment(timeSegment: number) {
-  return timeSegment > 9 ? timeSegment : `0${timeSegment}`
+  return timeSegment > 9 ? `${timeSegment}` : `0${timeSegment}`
 }
 
 function withTime(time: number) {

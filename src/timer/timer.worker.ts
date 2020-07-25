@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 
-let timer: NodeJS.Timeout | null = null;
+let timer: number | null = null;
 
 function timeout(time: number) {
   return new Promise((resolve, reject) => {
