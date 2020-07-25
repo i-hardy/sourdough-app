@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { GridItem } from './styled/Layout';
+import { List } from './styled/List';
+import { Form, Input } from './styled/Form';
 import ingredients from '../recipe/ingredients.json';
 
 interface Ingredient {
@@ -24,32 +27,32 @@ export function Ingredients() {
   }
 
   return (
-    <section className="ingredients">
+    <GridItem area="2 / 1 / 3 / 2">
       <h2>Ingredients</h2>
-      <form onSubmit={e => e.preventDefault()}>
+      <Form onSubmit={e => e.preventDefault()}>
         <label htmlFor="loaves">
           Loaves:
-          <input type="number" name="loaves" aria-label="Adjust the number of loaves for the recipe" id="loaves" value={loaves} onChange={changeLoafAmount} />
+          <Input type="number" name="loaves" aria-label="Adjust the number of loaves for the recipe" id="loaves" value={loaves} onChange={changeLoafAmount} />
         </label>
-      </form>
+      </Form>
       <div>
         <h3>For the levain:</h3>
-          <ul>
+          <List>
             {ingredients.levain.map(IngredientListItem)}
-          </ul>
+          </List>
       </div>
       <div>
         <h3>For the dough:</h3>
-        <ul>
+        <List>
           {ingredients.dough.map(IngredientListItem)}
-        </ul>
+        </List>
       </div>
       <div>
         <h3>Additionally:</h3>
-        <ul>
+        <List>
           <li>Rice flour or all-purpose flour for dusting</li>
-        </ul>
+        </List>
       </div>
-    </section>
+    </GridItem>
   )
 }

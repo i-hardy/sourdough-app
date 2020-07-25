@@ -1,11 +1,15 @@
 import React, { useEffect, useCallback } from 'react';
 import { useMachine } from '@xstate/react';
 import { State } from 'xstate';
-import './App.css';
+
 import { useTimer } from './timer';
 import { doughMachine, DoughContext, DoughEvent } from './stateMachine';
+
 import { KeyboardHandler } from './components/renderless/KeyboardHandler';
 import { TimerAlarm } from './components/renderless/TimerAlarm';
+
+import { Main, GridItem, Header, Column } from './components/styled/Layout';
+import { BigButton } from "./components/styled/Button";
 import { Controls } from './components/Controls';
 import { Ingredients } from './components/Ingredients';
 import { Instructions } from './components/Instructions';
@@ -45,29 +49,31 @@ function App() {
   }, [ready, send])
 
   return (
-    <div className="app">
-      <header className="header">
+    <Main>
+      <Header area="1 / 1 / 2 / 3">
         {!current.matches('idle') && <>
           <KeyboardHandler continueRecipe={continueRecipe} />
           <TimerAlarm ready={ready} suppressTimer={suppressTimer} />
         </>}
         <h1>Let's Make Sourdough!</h1>
-      </header>
+      </Header>
       <Ingredients />
-      {current.matches('idle') ? 
-        <section className="start">
-          <button className="button" onClick={() => send('START')}>Start</button>
-        </section> :
-        <Instructions
-          current={current}>
-            <Controls time={time} waiting={waiting} actions={{
-              continueRecipe,
-              skip,
-              reset: stopTimers
-            }}/>
-        </Instructions>
-      }
-    </div>
+      <GridItem area="2 / 2 / 3 / 3">
+        {current.matches('idle') ? 
+          <Column>
+            <BigButton onClick={() => send('START')}>Start</BigButton>
+          </Column> :
+          <Instructions
+            current={current}>
+              <Controls time={time} waiting={waiting} actions={{
+                continueRecipe,
+                skip,
+                reset: stopTimers
+              }}/>
+          </Instructions>
+        }
+      </GridItem>
+    </Main>
   );
 }
 

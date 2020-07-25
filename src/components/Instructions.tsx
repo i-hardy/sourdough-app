@@ -1,7 +1,9 @@
 import React, { useState, useEffect, ReactChild } from 'react';
 import { State } from 'xstate';
 import ReactMarkdown from 'react-markdown';
+
 import { DoughContext, DoughEvent } from '../stateMachine';
+import { Columns } from './styled/Layout';
 import { Stretch } from './Stretch';
 import { recipe } from '../recipe';
 
@@ -32,12 +34,12 @@ export function Instructions({ current, children }: InstructionProps) {
   }, [stateValue])
 
   return (
-    <section className="instructions">
+    <Columns>
       <div aria-live="polite">
         <ReactMarkdown source={stepText} />
         {current.matches('stretch') && <Stretch stretches={current.context.stretches} />}
       </div>
       {children}
-    </section>
+    </Columns>
   );
 }

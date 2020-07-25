@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 export const Button = styled.button`
+  cursor: pointer;
   background: none;
   display: block;
   padding: 0.5rem 1.2rem;
-  border: 0.1em solid #FFFFFF;
+  border: 1.6px solid #FFFFFF;
+  border-radius: 1.8px;
   box-sizing: border-box;
   font-weight: 300;
   color: #FFFFFF;
@@ -21,6 +23,12 @@ export const Button = styled.button`
     border-color: grey;
     background: none;
   }
+`;
+
+export const BigButton = styled(Button)`
+  font-size: 1.5rem;
+  width: 15rem;
+  height: 4rem;
 `;
 
 export const ButtonGroup = styled.div`
